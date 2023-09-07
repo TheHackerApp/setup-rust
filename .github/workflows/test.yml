@@ -1,6 +1,7 @@
+---
 name: Test
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - main
@@ -30,6 +31,6 @@ jobs:
           ssh-private-key: ${{ secrets.SHIPYARD_SSH_KEY }}
           token: ${{ secrets.SHIPYARD_TOKEN }}
           toolchain: ${{ matrix.rust }}
-      
+
       - run: cargo init . --bin --name CI
       - run: cargo add logging --registry ${{ matrix.registry }}
