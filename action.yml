@@ -12,6 +12,10 @@ inputs:
     description: The name of the registry as it appears in the Cargo.toml file
     required: false
     default: wafflehacks
+  toolchain:
+    description: Rust toolchain specification -- see https://rust-lang.github.io/rustup/concepts/toolchains.html#toolchain-specification
+    required: false
+    default: stable
   components:
     description: Comma-separated list of components to be additionally installed
     required: false
@@ -20,6 +24,7 @@ runs:
   steps:
     - uses: dtolnay/rust-toolchain@stable
       with:
+        toolchain: ${{ inputs.toolchain }}
         components: ${{ inputs.components }}
 
     - uses: webfactory/ssh-agent@v0.8.0
