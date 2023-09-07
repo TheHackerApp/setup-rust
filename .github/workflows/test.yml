@@ -1,0 +1,35 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Rust ${{ matrix.rust }} using ${{ matrix.registry }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - beta
+          - nightly
+        registry:
+          - wafflehacks
+          - testing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          ssh-private-key: ${{ secrets.SHIPYARD_SSH_KEY }}
+          token: ${{ secrets.SHIPYARD_TOKEN }}
+          toolchain: ${{ matrix.rust }}
+      
+      - run: cargo init . --bin --name CI
+      - run: cargo add logging --registry ${{ matrix.registry }}
