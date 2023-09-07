@@ -16,6 +16,7 @@ jobs:
     name: Rust ${{ matrix.rust }} using ${{ matrix.registry }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         rust:
           - stable
@@ -26,8 +27,14 @@ jobs:
           - testing
     steps:
       - uses: actions/checkout@v4
-      - uses: ./
+
+      - name: Set registry name
+        run: sed -i "s/REGISTRY/${{ matrix.registry }}/g" .cargo/config.toml
+
+      - name: TheHackerApp/setup-rust@main
+        uses: ./
         with:
+          registry: ${{ matrix.registry }}
           ssh-private-key: ${{ secrets.SHIPYARD_SSH_KEY }}
           token: ${{ secrets.SHIPYARD_TOKEN }}
           toolchain: ${{ matrix.rust }}
