@@ -40,5 +40,6 @@ jobs:
           token: ${{ secrets.SHIPYARD_TOKEN }}
           toolchain: ${{ matrix.rust }}
 
-      - run: cargo init . --bin --name CI
+      - run: cargo init . --bin --name ci
       - run: cargo add logging --registry ${{ matrix.registry }}
+      - run: cargo check
