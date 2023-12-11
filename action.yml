@@ -50,7 +50,5 @@ runs:
     - name: Set Cargo environment variables
       shell: bash
       run: |
-        registry=$(tr '[:lower:]' '[:upper:]' <<< ${{ inputs.registry }})
         echo "CARGO_NET_GIT_FETCH_WITH_CLI=true" >> $GITHUB_ENV
-        echo "CARGO_REGISTRIES_${registry}_TOKEN=${{ inputs.token }}" >> $GITHUB_ENV
-        echo "CARGO_REGISTRIES_${registry}_CREDENTIAL_HELPER=cargo:token" >> $GITHUB_ENV
+        echo "CARGO_REGISTRY_GLOBAL_CREDENTIAL_PROVIDERS=cargo:token" >> $GITHUB_ENV
