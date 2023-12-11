@@ -42,3 +42,4 @@ jobs:
 
       - run: cargo init . --bin --name CI
       - run: cargo add logging --registry ${{ matrix.registry }}
+      - run: cargo check
