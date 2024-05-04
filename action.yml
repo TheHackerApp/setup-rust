@@ -43,7 +43,9 @@ runs:
     - uses: TheHackerApp/setup-ssh@main
       with:
         private-key: ${{ inputs.ssh-private-key }}
-        host: ssh.shipyard.rs
+        host: |
+          ssh.shipyard.rs
+          github.com
 
     - name: Login to Shipyard registry
       shell: bash
