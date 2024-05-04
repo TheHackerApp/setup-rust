@@ -23,6 +23,14 @@ inputs:
   components:
     description: Comma-separated list of components to be additionally installed
     required: false
+  with-mold:
+    description: Whether to install the mold linker
+    required: false
+    default: true
+  mold-version:
+    description: Version of the mold linker to install
+    required: false
+    default: "2.31.0"
 
 runs:
   using: composite
@@ -52,3 +60,16 @@ runs:
       run: |
         echo "CARGO_NET_GIT_FETCH_WITH_CLI=true" >> $GITHUB_ENV
         echo "CARGO_REGISTRY_GLOBAL_CREDENTIAL_PROVIDERS=cargo:token" >> $GITHUB_ENV
+
+    - name: Install mold linker
+      shell: bash
+      if: inputs.with-mold == 'true'
+      run: |
+        wget -qO /tmp/mold.tar.gz https://github.com/rui314/mold/releases/download/v${{ inputs.mold-version }}/mold-${{ inputs.mold-version }}-x86_64-linux.tar.gz; \
+        sudo tar -xf /tmp/mold.tar.gz -C /usr/local --strip-components 1; \
+        rm /tmp/mold.tar.gz
+
+    - name: Install clang
+      shell: bash
+      if: inputs.with-mold == 'true'
+      run: sudo apt-get install -y clang libclang-dev
