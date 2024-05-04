@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  registry:
     name: Rust ${{ matrix.rust }} using ${{ matrix.registry }}
     runs-on: ubuntu-latest
     strategy:
@@ -43,3 +43,34 @@ jobs:
       - run: cargo init . --bin --name ci
       - run: cargo add logging --registry ${{ matrix.registry }}
       - run: cargo check
+
+  linker:
+    name: Rust ${{ matrix.rust }} with mold linker
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rust:
+          - stable
+          - beta
+          - nightly
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set registry name
+        run: sed -i "s/REGISTRY/wafflehacks/g" .cargo/config.toml
+
+      - name: TheHackerApp/setup-rust@main
+        uses: ./
+        with:
+          ssh-private-key: ${{ secrets.SHIPYARD_SSH_KEY }}
+          token: ${{ secrets.SHIPYARD_TOKEN }}
+          toolchain: ${{ matrix.rust }}
+          with-mold: true
+
+      - run: cargo init . --bin --name ci
+      - run: cargo add rand
+      - run: cargo check
+        env:
+          CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: clang
+          CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: -C link-args=-fuse-ld=mold
