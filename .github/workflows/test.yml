@@ -27,7 +27,7 @@ jobs:
           - wafflehacks
           - testing
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set registry name
         run: sed -i "s/REGISTRY/${{ matrix.registry }}/g" .cargo/config.toml
@@ -55,7 +55,7 @@ jobs:
           - beta
           - nightly
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set registry name
         run: sed -i "s/REGISTRY/wafflehacks/g" .cargo/config.toml
